@@ -1,0 +1,33 @@
+{
+    "name": "andrej-griniuk/cakephp-fractal-transformer-view",
+    "description": "CakePHP view builder utilizing Fractal library for entities transformation",
+    "type": "cakephp-plugin",
+    "keywords": ["cakephp", "api", "json", "rest", "fractal"],
+    "homepage": "http://github.com/andrej-griniuk/cakephp-fractal-transformer-view",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrej Griniuk",
+            "email": "andrej.griniuk@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "cakephp/cakephp": "~3.1",
+        "league/fractal": "^0.13.0@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "FractalTransformerView\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FractalTransformerView\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}
