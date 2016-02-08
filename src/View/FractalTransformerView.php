@@ -1,17 +1,17 @@
 <?php
 namespace FractalTransformerView\View;
 
+use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\EventManager;
 use Cake\Network\Request;
 use Cake\Network\Response;
-use FractalTransformerView\Serializer\ArraySerializer;
-use Cake\Core\Configure;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\ResultSet;
 use Cake\Utility\Hash;
 use Cake\View\JsonView;
 use Exception;
+use FractalTransformerView\Serializer\ArraySerializer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -44,7 +44,7 @@ class FractalTransformerView extends JsonView
     /**
      * Get transform class name for given var by figuring out which entity it belongs to. Return FALSE otherwise
      *
-     * @param $var
+     * @param mixed $var variable
      * @return bool|string
      */
     protected function getTransformerClass($var)
@@ -77,8 +77,8 @@ class FractalTransformerView extends JsonView
     /**
      * Get transformer for given var
      *
-     * @param $var
-     * @param bool $varName
+     * @param mixed $var variable
+     * @param bool $varName variable name
      * @return bool
      * @throws Exception
      */
@@ -103,8 +103,12 @@ class FractalTransformerView extends JsonView
 
         $transformer = new $transformerClass;
         if (!($transformer instanceof TransformerAbstract)) {
-            throw new Exception(sprintf('Transformer class not instance of TransformerAbstract: %s',
-                $transformerClass));
+            throw new Exception(
+                sprintf(
+                    'Transformer class not instance of TransformerAbstract: %s',
+                    $transformerClass
+                )
+            );
         }
 
         return $transformer;
@@ -113,9 +117,9 @@ class FractalTransformerView extends JsonView
     /**
      * Transform var using given manager
      *
-     * @param Manager $manager
-     * @param $var
-     * @param bool $varName
+     * @param Manager $manager  Fractal manager
+     * @param mixed $var variable
+     * @param bool $varName variable name
      * @return array
      * @throws Exception
      */
@@ -139,9 +143,9 @@ class FractalTransformerView extends JsonView
     /**
      * Returns data to be serialized.
      *
-     * @param bool $serialize
-     * @return array|mixed
-     * @throws Exception
+     * @param array|string|bool $serialize The name(s) of the view variable(s) that
+     *   need(s) to be serialized. If true all available view variables will be used.
+     * @return mixed The data to serialize.
      */
     protected function _dataToSerialize($serialize = true)
     {

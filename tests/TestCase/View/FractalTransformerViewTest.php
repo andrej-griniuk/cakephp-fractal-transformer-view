@@ -269,7 +269,7 @@ class FractalTransformerViewTest extends TestCase
         $this->assertEquals(
             [
                 'article' => ['title' => 'First Article'],
-                'author'  => $author
+                'author' => $author
             ],
             $this->protectedMethodCall($view, '_dataToSerialize')
         );
