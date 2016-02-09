@@ -4,7 +4,7 @@
 
 # FractalTransformerView plugin for CakePHP
 
-This plugin is thin wrapper for `JsonView` that allows to pass your view vars through [Fractal transformer][fractal-transformer] before serializing. What is [Fractal][fractal]?
+This plugin is a thin wrapper for `JsonView` that allows using [Fractal transformers][fractal-transformer] for your API output. What is [Fractal][fractal]?
 
 > Fractal provides a presentation and transformation layer for complex data output, the like found in RESTful APIs, and works really well with JSON. Think of this as a view layer for your JSON/YAML/etc.
 > When building an API it is common for people to just grab stuff from the database and pass it to json_encode(). This might be passable for “trivial” APIs but if they are in use by the public, or used by mobile applications then this will quickly lead to inconsistent output.
