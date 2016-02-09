@@ -24,7 +24,7 @@ composer require andrej-griniuk/cakephp-fractal-transformer-view
 
 
 ## Usage
-To enable the plugin set `FractalTransformerView.FractalTransformer` class name for viewBuilder. Then you just do what you would normally do in your [data views][http://book.cakephp.org/3.0/en/views/json-and-xml-views.html] - specify which view vars you want to get serialized by setting `_serialize`  var. E.g.:
+To enable the plugin set `FractalTransformerView.FractalTransformer` class name for viewBuilder. Then you just do what you would normally do in your [data views](http://book.cakephp.org/3.0/en/views/json-and-xml-views.html) - specify which view vars you want to get serialized by setting `_serialize`  var. E.g.:
 
 ```php
 namespace App\Controller;
@@ -94,7 +94,7 @@ https://github.com/andrej-griniuk/cakephp-fractal-transformer-view/issues
 
 ## Credits
 
-Inspired by @josegonzalez [`Using Fractal to transform entities for custom api endpoints`](http://josediazgonzalez.com/2015/12/01/using-fractal-to-transform-entities-for-custom-api-endpoints/).
+Inspired by @josegonzalez [Using Fractal to transform entities for custom api endpoints](http://josediazgonzalez.com/2015/12/01/using-fractal-to-transform-entities-for-custom-api-endpoints/).
 
 ## License
 
