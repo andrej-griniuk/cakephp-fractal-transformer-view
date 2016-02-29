@@ -15,6 +15,7 @@ use FractalTransformerView\Serializer\ArraySerializer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\SerializerAbstract;
 use League\Fractal\TransformerAbstract;
 
 /**
@@ -22,6 +23,11 @@ use League\Fractal\TransformerAbstract;
  */
 class FractalTransformerView extends JsonView
 {
+    /**
+     * @var \League\Fractal\Serializer\SerializerAbstract
+     */
+    protected $_serializer;
+
     /**
      * Constructor
      *
@@ -36,9 +42,40 @@ class FractalTransformerView extends JsonView
         EventManager $eventManager = null,
         array $viewOptions = []
     ) {
+        if (isset($viewOptions['serializer'])) {
+            $this->setSerializer($viewOptions['serializer']);
+        }
+
         parent::__construct($request, $response, $eventManager, $viewOptions);
 
         $this->_specialVars[] = '_transform';
+        $this->_specialVars[] = '_resourceKey';
+        $this->_specialVars[] = '_includes';
+    }
+
+    /**
+     * Sets the serializer
+     *
+     * @param \League\Fractal\Serializer\SerializerAbstract|null $serializer Serializer to use
+     * @return void
+     */
+    public function setSerializer(SerializerAbstract $serializer = null)
+    {
+        $this->_serializer = $serializer;
+    }
+
+    /**
+     * Get the currently set serializer instance, or return the default ArraySerializer
+     *
+     * @return \League\Fractal\Serializer\SerializerAbstract
+     */
+    public function getSerializer()
+    {
+        if (empty($this->_serializer)) {
+            return new ArraySerializer();
+        }
+
+        return $this->_serializer;
     }
 
     /**
@@ -130,9 +167,9 @@ class FractalTransformerView extends JsonView
         }
 
         if (is_array($var) || $var instanceof Query || $var instanceof ResultSet) {
-            $resource = new Collection($var, $transformer);
+            $resource = new Collection($var, $transformer, $this->get('_resourceKey'));
         } elseif ($var instanceof EntityInterface) {
-            $resource = new Item($var, $transformer);
+            $resource = new Item($var, $transformer, $this->get('_resourceKey'));
         } else {
             throw new Exception('Unserializable variable');
         }
@@ -151,9 +188,14 @@ class FractalTransformerView extends JsonView
     {
         $data = parent::_dataToSerialize($serialize);
 
-        $serializer = new ArraySerializer();
+        $serializer = $this->getSerializer();
+        $includes = $this->get('_includes');
         $manager = new Manager();
         $manager->setSerializer($serializer);
+
+        if ($includes) {
+            $manager->parseIncludes($includes);
+        }
 
         if (is_array($data)) {
             foreach ($data as $varName => &$var) {
