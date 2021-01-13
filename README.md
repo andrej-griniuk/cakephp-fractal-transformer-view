@@ -31,12 +31,13 @@ namespace App\Controller;
 
 class ArticlesController extends AppController
 {
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
+        
         $this->loadComponent('RequestHandler');
         
-        $this->viewBuilder()->className('FractalTransformerView.FractalTransformer');
+        $this->viewBuilder()->setClassName('FractalTransformerView.FractalTransformer');
     }
 
     public function index()

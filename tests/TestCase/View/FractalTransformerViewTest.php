@@ -19,7 +19,7 @@ use stdClass;
 class FractalTransformerViewTest extends TestCase
 {
 
-    public $fixtures = ['plugin.FractalTransformerView.articles', 'plugin.FractalTransformerView.authors'];
+    public $fixtures = ['plugin.FractalTransformerView.Articles', 'plugin.FractalTransformerView.Authors'];
 
     public function setUp(): void
     {
