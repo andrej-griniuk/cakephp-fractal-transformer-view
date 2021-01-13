@@ -1,17 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace FractalTransformerView\View;
 
-use Cake\Core\Configure;
+use FractalTransformerView\Serializer\ArraySerializer;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\EventManager;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Datasource\ResultSetDecorator;
 use Cake\ORM\Query;
 use Cake\ORM\ResultSet;
 use Cake\Utility\Hash;
 use Cake\View\JsonView;
 use Exception;
-use FractalTransformerView\Serializer\ArraySerializer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -23,35 +22,18 @@ use League\Fractal\TransformerAbstract;
 class FractalTransformerView extends JsonView
 {
     /**
-     * Constructor
-     *
-     * @param \Cake\Network\Request $request Request instance.
-     * @param \Cake\Network\Response $response Response instance.
-     * @param \Cake\Event\EventManager $eventManager EventManager instance.
-     * @param array $viewOptions An array of view options
-     */
-    public function __construct(
-        Request $request = null,
-        Response $response = null,
-        EventManager $eventManager = null,
-        array $viewOptions = []
-    ) {
-        parent::__construct($request, $response, $eventManager, $viewOptions);
-
-        $this->_specialVars[] = '_transform';
-    }
-
-    /**
      * Get transform class name for given var by figuring out which entity it belongs to. Return FALSE otherwise
      *
-     * @param mixed $var variable
-     * @return bool|string
+     * @param Query|ResultSet|ResultSetDecorator|EntityInterface $var variable
+     * @return string|null
      */
-    protected function getTransformerClass($var)
+    protected function getTransformerClass($var): ?string
     {
         $entity = null;
         if ($var instanceof Query) {
-            $entity = $var->repository()->newEntity();
+            $entity = $var->getRepository()->newEmptyEntity();
+        } elseif ($var instanceof ResultSetDecorator) {
+            $entity = $var->first();
         } elseif ($var instanceof ResultSet) {
             $entity = $var->first();
         } elseif ($var instanceof EntityInterface) {
@@ -61,14 +43,14 @@ class FractalTransformerView extends JsonView
         }
 
         if (!$entity || !is_object($entity)) {
-            return false;
+            return null;
         }
 
         $entityClass = get_class($entity);
         $transformerClass = str_replace('\\Model\\Entity\\', '\\Model\\Transformer\\', $entityClass) . 'Transformer';
 
         if (!class_exists($transformerClass)) {
-            return false;
+            return null;
         }
 
         return $transformerClass;
@@ -78,11 +60,11 @@ class FractalTransformerView extends JsonView
      * Get transformer for given var
      *
      * @param mixed $var variable
-     * @param bool $varName variable name
-     * @return bool
+     * @param string|null $varName variable name
+     * @return TransformerAbstract|null
      * @throws Exception
      */
-    protected function getTransformer($var, $varName = false)
+    protected function getTransformer($var, $varName = null): ?TransformerAbstract
     {
         $_transform = $this->get('_transform');
         $transformerClass = $varName
@@ -93,8 +75,8 @@ class FractalTransformerView extends JsonView
             $transformerClass = $this->getTransformerClass($var);
         }
 
-        if ($transformerClass === false) {
-            return false;
+        if (!$transformerClass) {
+            return null;
         }
 
         if (!class_exists($transformerClass)) {
@@ -117,19 +99,19 @@ class FractalTransformerView extends JsonView
     /**
      * Transform var using given manager
      *
-     * @param Manager $manager  Fractal manager
+     * @param Manager $manager
      * @param mixed $var variable
-     * @param bool $varName variable name
+     * @param string|null $varName variable name
      * @return array
      * @throws Exception
      */
-    protected function transform(Manager $manager, $var, $varName = false)
+    protected function transform(Manager $manager, $var, $varName = null)
     {
         if (!$transformer = $this->getTransformer($var, $varName)) {
             return $var;
         }
 
-        if (is_array($var) || $var instanceof Query || $var instanceof ResultSet) {
+        if (is_array($var) || $var instanceof Query || $var instanceof ResultSet || $var instanceof ResultSetDecorator) {
             $resource = new Collection($var, $transformer);
         } elseif ($var instanceof EntityInterface) {
             $resource = new Item($var, $transformer);
@@ -143,23 +125,25 @@ class FractalTransformerView extends JsonView
     /**
      * Returns data to be serialized.
      *
-     * @param array|string|bool $serialize The name(s) of the view variable(s) that
-     *   need(s) to be serialized. If true all available view variables will be used.
+     * @param array|string $serialize The name(s) of the view variable(s) that need(s) to be serialized.
      * @return mixed The data to serialize.
+     * @throws Exception
      */
-    protected function _dataToSerialize($serialize = true)
+    protected function _dataToSerialize($serialize)
     {
         $data = parent::_dataToSerialize($serialize);
 
-        $serializer = new ArraySerializer();
         $manager = new Manager();
-        $manager->setSerializer($serializer);
+        $manager->setSerializer(new ArraySerializer());
+
+        if ($includes = $this->get('_includes')) {
+            $manager->parseIncludes($includes);
+        }
 
         if (is_array($data)) {
-            foreach ($data as $varName => &$var) {
-                $var = $this->transform($manager, $var, $varName);
+            foreach ($data as $varName => $var) {
+                $data[$varName] = $this->transform($manager, $var, $varName);
             }
-            unset($var);
         } else {
             $data = $this->transform($manager, $data);
         }

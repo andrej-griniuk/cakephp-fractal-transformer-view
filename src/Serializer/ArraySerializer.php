@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace FractalTransformerView\Serializer;
 
 use League\Fractal\Serializer\ArraySerializer as Serializer;
