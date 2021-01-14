@@ -21,7 +21,7 @@ $findRoot = function ($root) {
         }
     } while ($root !== $lastRoot);
 
-    throw new Exception("Cannot find the root of the application, unable to run tests");
+    throw new Exception('Cannot find the root of the application, unable to run tests');
 };
 $root = $findRoot(__FILE__);
 unset($findRoot);
@@ -38,18 +38,21 @@ require_once $root . '/vendor/autoload.php';
 require_once $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';
 
 if (file_exists($root . '/config/bootstrap.php')) {
-    require $root . '/config/bootstrap.php';
+    include $root . '/config/bootstrap.php';
 
     return;
 }
 
-Configure::write('App', [
-    'namespace' => 'FractalTransformerView\Test\App',
-    'paths' => [
-        'plugins' => [ROOT . 'Plugin' . DS],
-        'templates' => [ROOT . 'templates' . DS],
-    ],
-]);
+Configure::write(
+    'App',
+    [
+        'namespace' => 'FractalTransformerView\Test\App',
+        'paths' => [
+            'plugins' => [ROOT . 'Plugin' . DS],
+            'templates' => [ROOT . 'templates' . DS],
+        ],
+    ]
+);
 
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');

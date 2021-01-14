@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace FractalTransformerView\Test\TestCase\View;
 
 use Cake\Core\Configure;
@@ -18,7 +20,6 @@ use stdClass;
  */
 class FractalTransformerViewTest extends TestCase
 {
-
     public $fixtures = ['plugin.FractalTransformerView.Articles', 'plugin.FractalTransformerView.Authors'];
 
     public function setUp(): void
@@ -195,7 +196,7 @@ class FractalTransformerViewTest extends TestCase
      */
     public function testGetTransformerByVarNameNotFound()
     {
-        $this->expectExceptionMessage("Invalid Transformer class: NotExistingTransformer");
+        $this->expectExceptionMessage('Invalid Transformer class: NotExistingTransformer');
         $this->expectException(Exception::class);
 
         $entity = $this->Articles->newEmptyEntity();
@@ -211,7 +212,7 @@ class FractalTransformerViewTest extends TestCase
      */
     public function testGetTransformerByVarNameInvalid()
     {
-        $this->expectExceptionMessage("Transformer class not instance of TransformerAbstract: \FractalTransformerView\Test\App\Model\Table\ArticlesTable");
+        $this->expectExceptionMessage('Transformer class not instance of TransformerAbstract: \FractalTransformerView\Test\App\Model\Table\ArticlesTable');
         $this->expectException(Exception::class);
 
         $entity = $this->Articles->newEmptyEntity();
@@ -288,7 +289,7 @@ class FractalTransformerViewTest extends TestCase
      */
     public function testTransformInvalid()
     {
-        $this->expectExceptionMessage("Unserializable variable");
+        $this->expectExceptionMessage('Unserializable variable');
         $this->expectException(Exception::class);
 
         $serializer = new ArraySerializer();
@@ -316,7 +317,7 @@ class FractalTransformerViewTest extends TestCase
         $this->assertEquals(
             [
                 'article' => ['title' => 'First Article'],
-                'author' => $author
+                'author' => $author,
             ],
             $this->protectedMethodCall($view, '_dataToSerialize', [['article', 'author']])
         );
@@ -342,9 +343,9 @@ class FractalTransformerViewTest extends TestCase
     /**
      * Call a protected method on an object
      *
-     * @param object $obj object
-     * @param string $name method to call
-     * @param array $args arguments to pass to the method
+     * @param  object $obj  object
+     * @param  string $name method to call
+     * @param  array  $args arguments to pass to the method
      * @return mixed
      * @throws \ReflectionException
      */
@@ -353,6 +354,7 @@ class FractalTransformerViewTest extends TestCase
         $class = new \ReflectionClass($obj);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
+
         return $method->invokeArgs($obj, $args);
     }
 }

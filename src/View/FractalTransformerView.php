@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace FractalTransformerView\View;
 
-use FractalTransformerView\Serializer\ArraySerializer;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\ResultSetDecorator;
 use Cake\ORM\Query;
@@ -11,6 +10,7 @@ use Cake\ORM\ResultSet;
 use Cake\Utility\Hash;
 use Cake\View\JsonView;
 use Exception;
+use FractalTransformerView\Serializer\ArraySerializer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -24,7 +24,7 @@ class FractalTransformerView extends JsonView
     /**
      * Get transform class name for given var by figuring out which entity it belongs to. Return FALSE otherwise
      *
-     * @param Query|ResultSet|ResultSetDecorator|EntityInterface $var variable
+     * @param  \Cake\ORM\Query|\Cake\ORM\ResultSet|\Cake\Datasource\ResultSetDecorator|\Cake\Datasource\EntityInterface $var variable
      * @return string|null
      */
     protected function getTransformerClass($var): ?string
@@ -59,10 +59,10 @@ class FractalTransformerView extends JsonView
     /**
      * Get transformer for given var
      *
-     * @param mixed $var variable
-     * @param string|null $varName variable name
-     * @return TransformerAbstract|null
-     * @throws Exception
+     * @param mixed $var Variable
+     * @param string|null $varName Variable name
+     * @return \League\Fractal\TransformerAbstract|null
+     * @throws \Exception
      */
     protected function getTransformer($var, $varName = null): ?TransformerAbstract
     {
@@ -83,7 +83,7 @@ class FractalTransformerView extends JsonView
             throw new Exception(sprintf('Invalid Transformer class: %s', $transformerClass));
         }
 
-        $transformer = new $transformerClass;
+        $transformer = new $transformerClass();
         if (!($transformer instanceof TransformerAbstract)) {
             throw new Exception(
                 sprintf(
@@ -99,15 +99,16 @@ class FractalTransformerView extends JsonView
     /**
      * Transform var using given manager
      *
-     * @param Manager $manager
-     * @param mixed $var variable
-     * @param string|null $varName variable name
+     * @param \League\Fractal\Manager $manager Manager
+     * @param mixed $var Variable
+     * @param string|null $varName Variable name
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     protected function transform(Manager $manager, $var, $varName = null)
     {
-        if (!$transformer = $this->getTransformer($var, $varName)) {
+        $transformer = $this->getTransformer($var, $varName);
+        if (!$transformer) {
             return $var;
         }
 
@@ -127,7 +128,7 @@ class FractalTransformerView extends JsonView
      *
      * @param array|string $serialize The name(s) of the view variable(s) that need(s) to be serialized.
      * @return mixed The data to serialize.
-     * @throws Exception
+     * @throws \Exception
      */
     protected function _dataToSerialize($serialize)
     {
@@ -136,7 +137,8 @@ class FractalTransformerView extends JsonView
         $manager = new Manager();
         $manager->setSerializer(new ArraySerializer());
 
-        if ($includes = $this->get('_includes')) {
+        $includes = $this->get('_includes');
+        if ($includes) {
             $manager->parseIncludes($includes);
         }
 

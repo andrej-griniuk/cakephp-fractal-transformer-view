@@ -19,7 +19,7 @@ class Plugin extends BasePlugin
      * The host application is provided as an argument. This allows you to load
      * additional plugin dependencies, or attach events.
      *
-     * @param \Cake\Core\PluginApplicationInterface $app The host application
+     * @param  \Cake\Core\PluginApplicationInterface $app The host application
      * @return void
      */
     public function bootstrap(PluginApplicationInterface $app): void
@@ -32,7 +32,7 @@ class Plugin extends BasePlugin
      * If your plugin has many routes and you would like to isolate them into a separate file,
      * you can create `$plugin/config/routes.php` and delete this method.
      *
-     * @param \Cake\Routing\RouteBuilder $routes The route builder to update.
+     * @param  \Cake\Routing\RouteBuilder $routes The route builder to update.
      * @return void
      */
     public function routes(RouteBuilder $routes): void
@@ -52,7 +52,7 @@ class Plugin extends BasePlugin
     /**
      * Add middleware for the plugin.
      *
-     * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to update.
+     * @param  \Cake\Http\MiddlewareQueue $middleware The middleware queue to update.
      * @return \Cake\Http\MiddlewareQueue
      */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
