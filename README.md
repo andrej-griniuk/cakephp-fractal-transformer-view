@@ -1,5 +1,5 @@
 [![Build Status](https://img.shields.io/travis/andrej-griniuk/cakephp-fractal-transformer-view/master.svg?style=flat-square)](https://travis-ci.org/andrej-griniuk/cakephp-fractal-transformer-view)
-[![Coverage Status](https://img.shields.io/coveralls/andrej-griniuk/cakephp-fractal-transformer-view.svg?style=flat-square)](https://coveralls.io/r/andrej-griniuk/cakephp-fractal-transformer-view?branch=master)
+[![Coverage Status](https://codecov.io/gh/andrej-griniuk/cakephp-fractal-transformer-view/branch/master/graph/badge.svg)](https://codecov.io/gh/andrej-griniuk/cakephp-fractal-transformer-view)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 # FractalTransformerView plugin for CakePHP
@@ -12,7 +12,7 @@ This plugin is a thin wrapper for `JsonView` that allows using [Fractal transfor
 
 ## Requirements
 
-- CakePHP 3.1+
+- CakePHP 4.0+ (use ~1.0 for CakePHP 3.1+)
 
 ## Installation
 
@@ -31,12 +31,13 @@ namespace App\Controller;
 
 class ArticlesController extends AppController
 {
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
+        
         $this->loadComponent('RequestHandler');
         
-        $this->viewBuilder()->className('FractalTransformerView.FractalTransformer');
+        $this->viewBuilder()->setClassName('FractalTransformerView.FractalTransformer');
     }
 
     public function index()

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace FractalTransformerView\Test\TestCase\Serializer;
 
 use Cake\Core\Configure;
@@ -10,7 +12,7 @@ use FractalTransformerView\Serializer\ArraySerializer;
  */
 class ArraySerializerTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('debug', false);

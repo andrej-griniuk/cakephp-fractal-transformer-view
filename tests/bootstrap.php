@@ -1,82 +1,63 @@
 <?php
-// @codingStandardsIgnoreFile
+declare(strict_types=1);
 
-$findRoot = function () {
-    $root = __DIR__;
-    for ($i = 0; $i < 3; $i++) {
+/**
+ * Test suite bootstrap for TwoFactorAuth.
+ *
+ * This function is used to find the location of CakePHP whether CakePHP
+ * has been installed as a dependency of the plugin, or the plugin is itself
+ * installed as a dependency of an application.
+ */
+
+use Cake\Core\Configure;
+use Cake\Core\Plugin;
+
+$findRoot = function ($root) {
+    do {
+        $lastRoot = $root;
         $root = dirname($root);
         if (is_dir($root . '/vendor/cakephp/cakephp')) {
             return $root;
         }
-    }
+    } while ($root !== $lastRoot);
+
+    throw new Exception('Cannot find the root of the application, unable to run tests');
 };
+$root = $findRoot(__FILE__);
+unset($findRoot);
 
-if (!defined('DS')) {
-    define('DS', DIRECTORY_SEPARATOR);
+chdir($root);
+
+require_once $root . '/vendor/autoload.php';
+
+/**
+ * Define fallback values for required constants and configuration.
+ * To customize constants and configuration remove this require
+ * and define the data required by your plugin here.
+ */
+require_once $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';
+
+if (file_exists($root . '/config/bootstrap.php')) {
+    include $root . '/config/bootstrap.php';
+
+    return;
 }
-define('ROOT', $findRoot());
-define('APP_DIR', 'App');
-define('WEBROOT_DIR', 'webroot');
-define('APP', ROOT . '/tests/App/');
-define('CONFIG', ROOT . '/tests/config/');
-define('WWW_ROOT', ROOT . DS . WEBROOT_DIR . DS);
-define('TESTS', ROOT . DS . 'tests' . DS);
-define('TMP', ROOT . DS . 'tmp' . DS);
-define('LOGS', TMP . 'logs' . DS);
-define('CACHE', TMP . 'cache' . DS);
-define('CAKE_CORE_INCLUDE_PATH', ROOT . '/vendor/cakephp/cakephp');
-define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
-define('CAKE', CORE_PATH . 'src' . DS);
 
-require ROOT . '/vendor/autoload.php';
-require CORE_PATH . 'config/bootstrap.php';
-
-Cake\Core\Configure::write('App', [
-    'namespace' => 'FractalTransformerView\Test\App',
-    'paths' => [
-        'templates' => [APP . 'Template' . DS],
+Configure::write(
+    'App',
+    [
+        'namespace' => 'FractalTransformerView\Test\App',
+        'paths' => [
+            'plugins' => [ROOT . 'Plugin' . DS],
+            'templates' => [ROOT . 'templates' . DS],
+        ],
     ]
-]);
-Cake\Core\Configure::write('debug', true);
+);
 
-$TMP = new \Cake\Filesystem\Folder(TMP);
-$TMP->create(TMP . 'cache/models', 0777);
-$TMP->create(TMP . 'cache/persistent', 0777);
-$TMP->create(TMP . 'cache/views', 0777);
-
-$cache = [
-    'default' => [
-        'engine' => 'File'
-    ],
-    '_cake_core_' => [
-        'className' => 'File',
-        'prefix' => 'fractal_transformer_view_myapp_cake_core_',
-        'path' => CACHE . 'persistent/',
-        'serialize' => true,
-        'duration' => '+10 seconds'
-    ],
-    '_cake_model_' => [
-        'className' => 'File',
-        'prefix' => 'fractal_transformer_view_my_app_cake_model_',
-        'path' => CACHE . 'models/',
-        'serialize' => 'File',
-        'duration' => '+10 seconds'
-    ]
-];
-
-Cake\Cache\Cache::config($cache);
-Cake\Core\Configure::write('Session', [
-    'defaults' => 'php'
-]);
-
-Cake\Core\Plugin::load('FractalTransformerView', ['path' => ROOT . DS, 'autoload' => true]);
-
-// Ensure default test connection is defined
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
 
-Cake\Datasource\ConnectionManager::config('test', [
-    'url' => getenv('db_dsn'),
-    'timezone' => 'UTC'
-]);
+Plugin::getCollection()->add(new \FractalTransformerView\Plugin());
+
+$_SERVER['PHP_SELF'] = '/';

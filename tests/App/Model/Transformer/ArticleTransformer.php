@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace FractalTransformerView\Test\App\Model\Transformer;
 
 use FractalTransformerView\Test\App\Model\Entity\Article;
@@ -9,13 +11,13 @@ class ArticleTransformer extends TransformerAbstract
     /**
      * Creates a response item for each instance
      *
-     * @param Article $article post entity
+     * @param  Article $article post entity
      * @return array transformed post
      */
     public function transform(Article $article)
     {
         return [
-            'title' => $article->get('title')
+            'title' => $article->get('title'),
         ];
     }
 }

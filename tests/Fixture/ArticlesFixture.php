@@ -1,15 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace FractalTransformerView\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * Short description for class.
- *
  */
 class ArticlesFixture extends TestFixture
 {
-
     /**
      * fields property
      *
@@ -20,7 +20,7 @@ class ArticlesFixture extends TestFixture
         'title' => ['type' => 'string', 'null' => true],
         'body' => 'text',
         'published' => ['type' => 'string', 'length' => 1, 'default' => 'N'],
-        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
+        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]],
     ];
 
     /**
@@ -31,6 +31,6 @@ class ArticlesFixture extends TestFixture
     public $records = [
         ['title' => 'First Article', 'body' => 'First Article Body', 'published' => 'Y'],
         ['title' => 'Second Article', 'body' => 'Second Article Body', 'published' => 'Y'],
-        ['title' => 'Third Article', 'body' => 'Third Article Body', 'published' => 'Y']
+        ['title' => 'Third Article', 'body' => 'Third Article Body', 'published' => 'Y'],
     ];
 }

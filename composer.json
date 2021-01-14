@@ -12,15 +12,12 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
-        "cakephp/cakephp": "~3.1",
-        "league/fractal": "^0.13.0@dev"
+        "php": ">=7.2",
+        "cakephp/cakephp": "~4.0",
+        "league/fractal": "^0.19.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "friendsofcake/cakephp-test-utilities": "dev-master",
-        "cakephp/cakephp-codesniffer": "dev-master",
-        "satooshi/php-coveralls": "dev-master"
+        "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {
