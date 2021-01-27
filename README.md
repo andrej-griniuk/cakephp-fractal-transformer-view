@@ -22,9 +22,8 @@ You can install this plugin into your CakePHP application using [Composer][compo
 composer require andrej-griniuk/cakephp-fractal-transformer-view
 ```
 
-
 ## Usage
-To enable the plugin set `FractalTransformerView.FractalTransformer` class name for viewBuilder. Then you just do what you would normally do in your [data views](http://book.cakephp.org/3.0/en/views/json-and-xml-views.html) - specify which view vars you want to get serialized by setting `_serialize`  var. E.g.:
+To enable the plugin set `FractalTransformerView.FractalTransformer` class name for viewBuilder. Then you just do what you would normally do in your [data views](http://book.cakephp.org/3.0/en/views/json-and-xml-views.html) - specify which view vars you want to get serialized by setting `serialize` view builder option. E.g.:
 
 ```php
 namespace App\Controller;
@@ -45,7 +44,7 @@ class ArticlesController extends AppController
         // Set the view vars that have to be serialized.
         $this->set('articles', $this->paginate());
         // Specify which view vars JsonView should serialize.
-        $this->set('_serialize', ['articles']);
+        $this->viewBuilder()->setOption('serialize', ['articles']);
     }
 }
 ```
@@ -77,16 +76,16 @@ class ArticleTransformer extends TransformerAbstract
 
 If transformer class not found the variable is serialized the normal way.
 
-Custom transformer class name can be set by defining `_transformer` view var:
+Custom transformer class name can be set by defining `transformer` view builder option:
 
 ```php
-$this->set('_transform', ['articles' => '\App\Model\Transformer\CustomArticleTransformer']);
+$this->viewBuilder()->setOption('transform', ['articles' => '\App\Model\Transformer\CustomArticleTransformer']);
 ```
 
 You can also define if you don't want to use transformer for certain variables:
 
 ```php
-$this->set('_transform', ['articles' => false]);
+$this->viewBuilder()->setOption('transform', ['articles' => false]);
 ```
 
 ## Bugs & Feedback

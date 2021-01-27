@@ -31,36 +31,36 @@ class FractalTransformerView extends JsonView
     protected $_serializer;
 
     /**
-     * Constructor
+     * Default config options.
      *
-     * @param \Cake\Http\ServerRequest|null $request Request instance.
-     * @param \Cake\Http\Response|null $response Response instance.
-     * @param \Cake\Event\EventManager|null $eventManager EventManager instance.
-     * @param array $viewOptions An array of view options
-     */
-    public function __construct(
-        ?ServerRequest $request = null,
-        ?Response $response = null,
-        ?EventManager $eventManager = null,
-        array $viewOptions = []
-    ) {
-        parent::__construct($request, $response, $eventManager, $viewOptions);
-
-        if (isset($viewOptions['serializer'])) {
-            $this->setSerializer($viewOptions['serializer']);
-        }
-    }
-
-    /**
-     * Sets the serializer
+     * Use ViewBuilder::setOption()/setOptions() in your controller to set these options.
      *
-     * @param \League\Fractal\Serializer\SerializerAbstract|null $serializer Serializer to use
-     * @return void
+     * - `serialize`: Option to convert a set of view variables into a serialized response.
+     *   Its value can be a string for single variable name or array for multiple
+     *   names. If true all view variables will be serialized. If null or false
+     *   normal view template will be rendered.
+     * - `jsonOptions`: Options for json_encode(). For e.g. `JSON_HEX_TAG | JSON_HEX_APOS`.
+     * - `jsonp`: Enables JSONP support and wraps response in callback function provided in query string.
+     *   - Setting it to true enables the default query string parameter "callback".
+     *   - Setting it to a string value, uses the provided query string parameter
+     *     for finding the JSONP callback name.
+     * - `transform`: Specify custom serializers for resource
+     * - `resourceKey`: Specify which view var to serialize
+     * - `includes`: Pass includes to the transformer
+     * - `serializer`: Use a different serializer. The default one is ArraySerializer
+     *
+     * @var array
+     * @pslam-var array{serialize:string|bool|null, jsonOptions: int|null, jsonp: bool|string|null}
      */
-    public function setSerializer(?SerializerAbstract $serializer = null)
-    {
-        $this->_serializer = $serializer;
-    }
+    protected $_defaultConfig = [
+        'serialize' => null,
+        'jsonOptions' => null,
+        'jsonp' => null,
+        'transform' => null,
+        'resourceKey' => null,
+        'includes' => null,
+        'serializer' => null,
+    ];
 
     /**
      * Get the currently set serializer instance, or return the default ArraySerializer
@@ -69,8 +69,8 @@ class FractalTransformerView extends JsonView
      */
     public function getSerializer()
     {
-        if (empty($this->_serializer)) {
-            return new ArraySerializer();
+        if (!$this->_serializer) {
+            $this->_serializer = $this->getConfig('serializer', new ArraySerializer());
         }
 
         return $this->_serializer;
@@ -121,7 +121,7 @@ class FractalTransformerView extends JsonView
      */
     protected function getTransformer($var, $varName = null): ?TransformerAbstract
     {
-        $_transform = $this->get('_transform');
+        $_transform = $this->getConfig('transform');
         $transformerClass = $varName
             ? Hash::get((array)$_transform, $varName)
             : $_transform;
@@ -167,10 +167,12 @@ class FractalTransformerView extends JsonView
             return $var;
         }
 
+        $resourceKey = $this->getConfig('resourceKey');
+
         if (is_array($var) || $var instanceof Query || $var instanceof ResultSet || $var instanceof ResultSetDecorator) {
-            $resource = new Collection($var, $transformer, $this->get('_resourceKey'));
+            $resource = new Collection($var, $transformer, $resourceKey);
         } elseif ($var instanceof EntityInterface) {
-            $resource = new Item($var, $transformer, $this->get('_resourceKey'));
+            $resource = new Item($var, $transformer, $resourceKey);
         } else {
             throw new Exception('Unserializable variable');
         }
@@ -193,7 +195,7 @@ class FractalTransformerView extends JsonView
         $manager = new Manager();
         $manager->setSerializer($serializer);
 
-        $includes = $this->get('_includes');
+        $includes = $this->getConfig('includes');
         if ($includes) {
             $manager->parseIncludes($includes);
         }
