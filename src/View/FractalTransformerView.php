@@ -5,9 +5,6 @@ namespace FractalTransformerView\View;
 
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\ResultSetDecorator;
-use Cake\Event\EventManager;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
 use Cake\ORM\Query;
 use Cake\ORM\ResultSet;
 use Cake\Utility\Hash;
@@ -17,7 +14,6 @@ use FractalTransformerView\Serializer\ArraySerializer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\SerializerAbstract;
 use League\Fractal\TransformerAbstract;
 
 /**
@@ -61,20 +57,6 @@ class FractalTransformerView extends JsonView
         'includes' => null,
         'serializer' => null,
     ];
-
-    /**
-     * Get the currently set serializer instance, or return the default ArraySerializer
-     *
-     * @return \League\Fractal\Serializer\SerializerAbstract
-     */
-    public function getSerializer()
-    {
-        if (!$this->_serializer) {
-            $this->_serializer = $this->getConfig('serializer', new ArraySerializer());
-        }
-
-        return $this->_serializer;
-    }
 
     /**
      * Get transform class name for given var by figuring out which entity it belongs to. Return FALSE otherwise
@@ -191,7 +173,7 @@ class FractalTransformerView extends JsonView
     {
         $data = parent::_dataToSerialize($serialize);
 
-        $serializer = $this->getSerializer();
+        $serializer = $this->getConfig('serializer', new ArraySerializer());
         $manager = new Manager();
         $manager->setSerializer($serializer);
 
