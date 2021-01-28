@@ -167,7 +167,7 @@ class FractalTransformerViewTest extends TestCase
         $entity = $this->Authors->newEmptyEntity();
 
         $view = new FractalTransformerView();
-        $view->set('_transform', ['author' => '\FractalTransformerView\Test\App\Model\Transformer\CustomAuthorTransformer']);
+        $view->setConfig('transform', ['author' => '\FractalTransformerView\Test\App\Model\Transformer\CustomAuthorTransformer']);
 
         $this->assertInstanceOf(
             'FractalTransformerView\Test\App\Model\Transformer\CustomAuthorTransformer',
@@ -183,7 +183,7 @@ class FractalTransformerViewTest extends TestCase
         $entity = $this->Articles->newEmptyEntity();
 
         $view = new FractalTransformerView();
-        $view->set('_transform', ['article' => false]);
+        $view->setConfig('transform', ['article' => false]);
 
         $this->assertEquals(
             false,
@@ -202,7 +202,7 @@ class FractalTransformerViewTest extends TestCase
         $entity = $this->Articles->newEmptyEntity();
 
         $view = new FractalTransformerView();
-        $view->set('_transform', ['article' => 'NotExistingTransformer']);
+        $view->setConfig('transform', ['article' => 'NotExistingTransformer']);
 
         $this->protectedMethodCall($view, 'getTransformer', [$entity, 'article']);
     }
@@ -218,7 +218,7 @@ class FractalTransformerViewTest extends TestCase
         $entity = $this->Articles->newEmptyEntity();
 
         $view = new FractalTransformerView();
-        $view->set('_transform', ['article' => '\FractalTransformerView\Test\App\Model\Table\ArticlesTable']);
+        $view->setConfig('transform', ['article' => '\FractalTransformerView\Test\App\Model\Table\ArticlesTable']);
 
         $this->protectedMethodCall($view, 'getTransformer', [$entity, 'article']);
     }
@@ -297,7 +297,7 @@ class FractalTransformerViewTest extends TestCase
         $manager->setSerializer($serializer);
 
         $view = new FractalTransformerView();
-        $view->set('_transform', ['std' => '\FractalTransformerView\Test\App\Model\Transformer\CustomAuthorTransformer']);
+        $view->setConfig('transform', ['std' => '\FractalTransformerView\Test\App\Model\Transformer\CustomAuthorTransformer']);
 
         $this->protectedMethodCall($view, 'transform', [$manager, new stdClass(), 'std']);
     }

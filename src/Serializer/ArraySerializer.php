@@ -10,7 +10,7 @@ class ArraySerializer extends Serializer
     /**
      * Serialize a collection.
      *
-     * @param string $resourceKey Resource key
+     * @param mixed $resourceKey Resource key
      * @param array  $data Data
      * @return array
      */
