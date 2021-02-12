@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace FractalTransformerView\View;
 
+use Cake\Collection\CollectionInterface;
 use Cake\Datasource\EntityInterface;
-use Cake\Datasource\ResultSetDecorator;
 use Cake\ORM\Query;
-use Cake\ORM\ResultSet;
 use Cake\Utility\Hash;
 use Cake\View\JsonView;
 use Exception;
@@ -61,7 +60,7 @@ class FractalTransformerView extends JsonView
     /**
      * Get transform class name for given var by figuring out which entity it belongs to. Return FALSE otherwise
      *
-     * @param  \Cake\ORM\Query|\Cake\ORM\ResultSet|\Cake\Datasource\ResultSetDecorator|\Cake\Datasource\EntityInterface $var variable
+     * @param  \Cake\ORM\Query|\Cake\Collection\CollectionInterface|\Cake\Datasource\EntityInterface $var variable
      * @return string|null
      */
     protected function getTransformerClass($var): ?string
@@ -69,9 +68,7 @@ class FractalTransformerView extends JsonView
         $entity = null;
         if ($var instanceof Query) {
             $entity = $var->getRepository()->newEmptyEntity();
-        } elseif ($var instanceof ResultSetDecorator) {
-            $entity = $var->first();
-        } elseif ($var instanceof ResultSet) {
+        } elseif ($var instanceof CollectionInterface) {
             $entity = $var->first();
         } elseif ($var instanceof EntityInterface) {
             $entity = $var;
@@ -79,7 +76,7 @@ class FractalTransformerView extends JsonView
             $entity = reset($var);
         }
 
-        if (!$entity || !is_object($entity)) {
+        if (!$entity || !$entity instanceof EntityInterface) {
             return null;
         }
 
@@ -151,7 +148,7 @@ class FractalTransformerView extends JsonView
 
         $resourceKey = $this->getConfig('resourceKey');
 
-        if (is_array($var) || $var instanceof Query || $var instanceof ResultSet || $var instanceof ResultSetDecorator) {
+        if (is_array($var) || $var instanceof Query || $var instanceof CollectionInterface) {
             $resource = new Collection($var, $transformer, $resourceKey);
         } elseif ($var instanceof EntityInterface) {
             $resource = new Item($var, $transformer, $resourceKey);

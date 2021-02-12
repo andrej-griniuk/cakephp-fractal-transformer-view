@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace FractalTransformerView\Test\TestCase\View;
 
-use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Exception;
 use FractalTransformerView\Serializer\ArraySerializer;
@@ -14,21 +12,27 @@ use stdClass;
 
 /**
  * FractalTransformerViewTest
- *
- * @property \Cake\ORM\Table Articles
- * @property \Cake\ORM\Table Authors
  */
 class FractalTransformerViewTest extends TestCase
 {
     public $fixtures = ['plugin.FractalTransformerView.Articles', 'plugin.FractalTransformerView.Authors'];
 
+    /**
+     * @var \Cake\ORM\Table
+     */
+    protected $Articles;
+
+    /**
+     * @var \Cake\ORM\Table
+     */
+    protected $Authors;
+
     public function setUp(): void
     {
         parent::setUp();
-        Configure::write('debug', false);
 
-        $this->Articles = TableRegistry::getTableLocator()->get('Articles');
-        $this->Authors = TableRegistry::getTableLocator()->get('Authors');
+        $this->Articles = $this->getTableLocator()->get('Articles');
+        $this->Authors = $this->getTableLocator()->get('Authors');
     }
 
     /**
@@ -58,6 +62,21 @@ class FractalTransformerViewTest extends TestCase
         $this->assertEquals(
             'FractalTransformerView\Test\App\Model\Transformer\ArticleTransformer',
             $this->protectedMethodCall($view, 'getTransformerClass', [$resultSet])
+        );
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetTransformerClassFromCollection()
+    {
+        $collection = $this->Articles->find()->take(2);
+
+        $view = new FractalTransformerView();
+
+        $this->assertEquals(
+            'FractalTransformerView\Test\App\Model\Transformer\ArticleTransformer',
+            $this->protectedMethodCall($view, 'getTransformerClass', [$collection])
         );
     }
 
