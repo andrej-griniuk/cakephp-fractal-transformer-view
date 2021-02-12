@@ -88,6 +88,12 @@ You can also define if you don't want to use transformer for certain variables:
 $this->viewBuilder()->setOption('transform', ['articles' => false]);
 ```
 
+You can set a custom serializer (class name or object) via `serializer` view builder option:
+
+```php
+$this->viewBuilder()->setOption('serializer', new CustomSerializer());
+```
+
 ## Bugs & Feedback
 
 https://github.com/andrej-griniuk/cakephp-fractal-transformer-view/issues

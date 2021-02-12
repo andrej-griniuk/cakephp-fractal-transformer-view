@@ -170,7 +170,16 @@ class FractalTransformerView extends JsonView
     {
         $data = parent::_dataToSerialize($serialize);
 
-        $serializer = $this->getConfig('serializer', new ArraySerializer());
+        $serializerClass = $this->getConfig('serializer');
+        if (!$serializerClass) {
+            $serializer = new ArraySerializer();
+        } elseif (is_object($serializerClass)) {
+            $serializer = $serializerClass;
+        } elseif (class_exists($serializerClass)) {
+            $serializer = new $serializerClass;
+        } else {
+            throw new Exception('Invalid serializer option');
+        }
         $manager = new Manager();
         $manager->setSerializer($serializer);
 
