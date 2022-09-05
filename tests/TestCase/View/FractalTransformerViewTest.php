@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace FractalTransformerView\Test\TestCase\View;
@@ -70,7 +71,7 @@ class FractalTransformerViewTest extends TestCase
      */
     public function testGetTransformerClassFromCollection()
     {
-        $collection = $this->Articles->find()->take(2);
+        $collection = $this->Articles->find()->all()->take(2);
 
         $view = new FractalTransformerView();
 
