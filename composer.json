@@ -1,5 +1,5 @@
 {
-    "name": "andrej-griniuk/cakephp-fractal-transformer-view",
+    "name": "czepter/cakephp-fractal-transformer-view",
     "description": "CakePHP view builder utilizing Fractal library for entities transformation",
     "type": "cakephp-plugin",
     "keywords": [
@@ -9,12 +9,16 @@
         "rest",
         "fractal"
     ],
-    "homepage": "http://github.com/andrej-griniuk/cakephp-fractal-transformer-view",
+    "homepage": "http://github.com/czepter/cakephp-fractal-transformer-view",
     "license": "MIT",
     "authors": [
         {
             "name": "Andrej Griniuk",
             "email": "andrej.griniuk@gmail.com"
+        },
+        {
+            "name": "Christian Zepter",
+            "email": "dev@czepter.de"
         }
     ],
     "require": {
