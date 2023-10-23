@@ -18,7 +18,7 @@ class ArraySerializerTest extends TestCase
         Configure::write('debug', false);
     }
 
-    public function testCollection()
+    public function testCollection(): void
     {
         $serializer = new ArraySerializer();
         $data = ['test'];
