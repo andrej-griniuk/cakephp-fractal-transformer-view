@@ -33,5 +33,10 @@
     },
     "suggest": {
         "cakephp/bake": "Required to generate transformers."
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
