@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/travis/andrej-griniuk/cakephp-fractal-transformer-view/master.svg?style=flat-square)](https://travis-ci.org/andrej-griniuk/cakephp-fractal-transformer-view)
+[![Build Status](https://app.travis-ci.com/andrej-griniuk/cakephp-fractal-transformer-view.svg?branch=master)](https://app.travis-ci.com/andrej-griniuk/cakephp-fractal-transformer-view)
 [![Coverage Status](https://codecov.io/gh/andrej-griniuk/cakephp-fractal-transformer-view/branch/master/graph/badge.svg)](https://codecov.io/gh/andrej-griniuk/cakephp-fractal-transformer-view)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
