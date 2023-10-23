@@ -1,0 +1,24 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }}\Model\Transformer;
+
+use {{ entityClass }};
+use League\Fractal\TransformerAbstract;
+
+class {{ name }}Transformer extends TransformerAbstract
+{
+    /**
+     * Creates a response item for each instance
+     *
+     * @return array the transformed entity
+     */
+    public function transform({{ entityName }} ${{ entityVariable }})
+    {
+        return [
+{% for column in columns %}
+            '{{ column }}' => ${{ entityVariable }}->{{ column }},
+{% endfor %}
+        ];
+    }
+}
