@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
+use Cake\TestSuite\Fixture\SchemaLoader;
 
 $findRoot = function ($root) {
     do {
@@ -61,3 +62,5 @@ if (!getenv('db_dsn')) {
 Plugin::getCollection()->add(new \FractalTransformerView\Plugin());
 
 $_SERVER['PHP_SELF'] = '/';
+
+(new SchemaLoader())->loadInternalFile('tests/schema.php');
