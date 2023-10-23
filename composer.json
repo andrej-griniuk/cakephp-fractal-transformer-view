@@ -17,7 +17,8 @@
         "league/fractal": "^0.20.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.6"
+        "phpunit/phpunit": "^9.3",
+        "cakephp/bake": "^2.9"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +29,14 @@
         "psr-4": {
             "FractalTransformerView\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    },
+    "suggest": {
+        "cakephp/bake": "Required to generate transformers."
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }
