@@ -60,7 +60,7 @@ class FractalTransformerView extends JsonView
     /**
      * Get transform class name for given var by figuring out which entity it belongs to. Return FALSE otherwise
      *
-     * @param  \Cake\ORM\Query|\Cake\Collection\CollectionInterface|\Cake\Datasource\EntityInterface $var variable
+     * @param \Cake\ORM\Query|\Cake\Collection\CollectionInterface|\Cake\Datasource\EntityInterface $var variable
      * @return string|null
      */
     protected function getTransformerClass($var): ?string
@@ -176,7 +176,7 @@ class FractalTransformerView extends JsonView
         } elseif (is_object($serializerClass)) {
             $serializer = $serializerClass;
         } elseif (class_exists($serializerClass)) {
-            $serializer = new $serializerClass;
+            $serializer = new $serializerClass();
         } else {
             throw new Exception('Invalid serializer option');
         }
