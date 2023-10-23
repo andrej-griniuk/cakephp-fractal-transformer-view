@@ -1,4 +1,5 @@
 language: php
+dist: jammy
 
 php:
   - 7.4
