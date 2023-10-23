@@ -30,6 +30,9 @@
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     },
+    "suggest": {
+        "cakephp/bake": "Required to generate transformers."
+    },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
