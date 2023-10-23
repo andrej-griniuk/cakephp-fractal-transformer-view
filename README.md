@@ -93,6 +93,17 @@ You can set a custom serializer (class name or object) via `serializer` view bui
 ```php
 $this->viewBuilder()->setOption('serializer', new CustomSerializer());
 ```
+## Baking Transformers
+
+To bake transformers you must include the plugin in your src/Application.php file. Add the following to your bootstrap method:
+
+```php
+$this->addPlugin('FractalTransformerView');
+```
+
+You must also have the [cakephp/bake](https://packagist.org/packages/cakephp/bake) composer package installed.
+
+You can now run `bin/cake bake transformer YOUR_MODEL` to create transformers.
 
 ## Bugs & Feedback
 

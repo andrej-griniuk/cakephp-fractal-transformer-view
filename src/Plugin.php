@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace FractalTransformerView;
 
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\RouteBuilder;
+use FractalTransformerView\Command\BakeTransformerCommand;
 
 /**
  * Plugin for FractalTransformerView
@@ -60,5 +62,20 @@ class Plugin extends BasePlugin
         // Add your middlewares here
 
         return $middlewareQueue;
+    }
+
+    /**
+     * Add console commands for the plugin.
+     *
+     * @param \Cake\Console\CommandCollection $commands The command collection to update
+     * @return \Cake\Console\CommandCollection
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        if (class_exists('Bake\Command\SimpleBakeCommand')) {
+            $commands->add('bake transformer', BakeTransformerCommand::class);
+        }
+
+        return $commands;
     }
 }
