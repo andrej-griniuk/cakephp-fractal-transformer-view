@@ -15,7 +15,7 @@ class ArticlesFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
+    public array $records = [
         ['title' => 'First Article', 'body' => 'First Article Body', 'published' => 'Y'],
         ['title' => 'Second Article', 'body' => 'Second Article Body', 'published' => 'Y'],
         ['title' => 'Third Article', 'body' => 'Third Article Body', 'published' => 'Y'],

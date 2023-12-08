@@ -15,7 +15,7 @@ class AuthorsFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
+    public array $records = [
         ['name' => 'mariano'],
         ['name' => 'nate'],
         ['name' => 'larry'],

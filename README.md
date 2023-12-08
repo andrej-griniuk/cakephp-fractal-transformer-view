@@ -12,7 +12,7 @@ This plugin is a thin wrapper for `JsonView` that allows using [Fractal transfor
 
 ## Requirements
 
-- CakePHP 4.x (use ~1.0 for CakePHP 3.x)
+- CakePHP 5.x (use ~1.0 for CakePHP 3.x, ~2.0 for CakePHP 4.x)
 
 ## Installation
 

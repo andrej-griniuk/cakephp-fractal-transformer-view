@@ -12,6 +12,7 @@ declare(strict_types=1);
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\TestSuite\Fixture\SchemaLoader;
+use FractalTransformerView\Plugin as FractalTransformerViewPlugin;
 
 $findRoot = function ($root) {
     do {
@@ -52,6 +53,7 @@ Configure::write(
             'plugins' => [ROOT . 'Plugin' . DS],
             'templates' => [ROOT . 'templates' . DS],
         ],
+        'encoding' => 'UTF-8',
     ]
 );
 
@@ -59,7 +61,7 @@ if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
 
-Plugin::getCollection()->add(new \FractalTransformerView\Plugin());
+Plugin::getCollection()->add(new FractalTransformerViewPlugin());
 
 $_SERVER['PHP_SELF'] = '/';
 

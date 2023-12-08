@@ -5,7 +5,10 @@ namespace FractalTransformerView\View;
 
 use Cake\Collection\CollectionInterface;
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\Paging\PaginatedResultSet;
+use Cake\Datasource\ResultSetDecorator;
 use Cake\ORM\Query;
+use Cake\ORM\ResultSet;
 use Cake\Utility\Hash;
 use Cake\View\JsonView;
 use Exception;
@@ -20,11 +23,6 @@ use League\Fractal\TransformerAbstract;
  */
 class FractalTransformerView extends JsonView
 {
-    /**
-     * @var \League\Fractal\Serializer\SerializerAbstract
-     */
-    protected $_serializer;
-
     /**
      * Default config options.
      *
@@ -47,7 +45,7 @@ class FractalTransformerView extends JsonView
      * @var array
      * @pslam-var array{serialize:string|bool|null, jsonOptions: int|null, jsonp: bool|string|null}
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'serialize' => null,
         'jsonOptions' => null,
         'jsonp' => null,
@@ -60,14 +58,21 @@ class FractalTransformerView extends JsonView
     /**
      * Get transform class name for given var by figuring out which entity it belongs to. Return FALSE otherwise
      *
-     * @param \Cake\ORM\Query|\Cake\Collection\CollectionInterface|\Cake\Datasource\EntityInterface $var variable
+     * @param \Cake\ORM\Query|\Cake\ORM\ResultSet|\Cake\Datasource\ResultSetDecorator|\Cake\Datasource\EntityInterface|\Cake\Collection\CollectionInterface|mixed $var variable
      * @return string|null
      */
-    protected function getTransformerClass($var): ?string
+    protected function getTransformerClass(mixed $var): ?string
     {
         $entity = null;
         if ($var instanceof Query) {
             $entity = $var->getRepository()->newEmptyEntity();
+        } elseif ($var instanceof PaginatedResultSet) {
+            /** @phpstan-ignore-next-line */
+            $entity = $var->items()->first();
+        } elseif ($var instanceof ResultSetDecorator) {
+            $entity = $var->first();
+        } elseif ($var instanceof ResultSet) {
+            $entity = $var->first();
         } elseif ($var instanceof CollectionInterface) {
             $entity = $var->first();
         } elseif ($var instanceof EntityInterface) {
@@ -76,7 +81,7 @@ class FractalTransformerView extends JsonView
             $entity = reset($var);
         }
 
-        if (!$entity || !$entity instanceof EntityInterface) {
+        if (!$entity || !is_object($entity)) {
             return null;
         }
 
@@ -98,7 +103,7 @@ class FractalTransformerView extends JsonView
      * @return \League\Fractal\TransformerAbstract|null
      * @throws \Exception
      */
-    protected function getTransformer($var, $varName = null): ?TransformerAbstract
+    protected function getTransformer(mixed $var, ?string $varName = null): ?TransformerAbstract
     {
         $_transform = $this->getConfig('transform');
         $transformerClass = $varName
@@ -136,10 +141,10 @@ class FractalTransformerView extends JsonView
      * @param \League\Fractal\Manager $manager Manager
      * @param mixed $var Variable
      * @param string|null $varName Variable name
-     * @return array
+     * @return mixed
      * @throws \Exception
      */
-    protected function transform(Manager $manager, $var, $varName = null)
+    protected function transform(Manager $manager, mixed $var, ?string $varName = null): mixed
     {
         $transformer = $this->getTransformer($var, $varName);
         if (!$transformer) {
@@ -148,7 +153,7 @@ class FractalTransformerView extends JsonView
 
         $resourceKey = $this->getConfig('resourceKey');
 
-        if (is_array($var) || $var instanceof Query || $var instanceof CollectionInterface) {
+        if (is_array($var) || $var instanceof Query || $var instanceof ResultSet || $var instanceof ResultSetDecorator || $var instanceof PaginatedResultSet) {
             $resource = new Collection($var, $transformer, $resourceKey);
         } elseif ($var instanceof EntityInterface) {
             $resource = new Item($var, $transformer, $resourceKey);
@@ -166,7 +171,7 @@ class FractalTransformerView extends JsonView
      * @return mixed The data to serialize.
      * @throws \Exception
      */
-    protected function _dataToSerialize($serialize)
+    protected function _dataToSerialize(array|string $serialize): mixed
     {
         $data = parent::_dataToSerialize($serialize);
 
