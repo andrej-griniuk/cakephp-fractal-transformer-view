@@ -12,7 +12,7 @@ declare(strict_types=1);
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\TestSuite\Fixture\SchemaLoader;
-use FractalTransformerView\Plugin as FractalTransformerViewPlugin;
+use FractalTransformerView\FractalTransformerViewPlugin;
 
 $findRoot = function ($root) {
     do {

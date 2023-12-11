@@ -10,7 +10,7 @@ use FractalTransformerView\Command\BakeTransformerCommand;
 /**
  * Plugin for FractalTransformerView
  */
-class Plugin extends BasePlugin
+class FractalTransformerViewPlugin extends BasePlugin
 {
     /**
      * Add console commands for the plugin.
