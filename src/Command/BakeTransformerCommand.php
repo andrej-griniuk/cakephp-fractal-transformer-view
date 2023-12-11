@@ -15,7 +15,7 @@ class BakeTransformerCommand extends SimpleBakeCommand
      *
      * @var string
      */
-    protected $pathFragment = 'Model/Transformer/';
+    protected string $pathFragment = 'Model/Transformer/';
 
     /**
      * Get the generated object's name.

@@ -8,6 +8,7 @@ use Exception;
 use FractalTransformerView\Serializer\ArraySerializer;
 use FractalTransformerView\View\FractalTransformerView;
 use League\Fractal\Manager;
+use ReflectionClass;
 use stdClass;
 
 /**
@@ -15,7 +16,7 @@ use stdClass;
  */
 class FractalTransformerViewTest extends TestCase
 {
-    public $fixtures = ['plugin.FractalTransformerView.Articles', 'plugin.FractalTransformerView.Authors'];
+    public array $fixtures = ['plugin.FractalTransformerView.Articles', 'plugin.FractalTransformerView.Authors'];
 
     /**
      * @var \Cake\ORM\Table
@@ -370,9 +371,8 @@ class FractalTransformerViewTest extends TestCase
      */
     public function protectedMethodCall(object $obj, string $name, array $args = [])
     {
-        $class = new \ReflectionClass($obj);
+        $class = new ReflectionClass($obj);
         $method = $class->getMethod($name);
-        $method->setAccessible(true);
 
         return $method->invokeArgs($obj, $args);
     }

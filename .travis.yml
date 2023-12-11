@@ -1,9 +1,14 @@
 language: php
 
+dist: jammy
+addons:
+  apt:
+    packages:
+      - "libonig5"
+
 php:
-  - 7.4
-  - 8.0
   - 8.1
+  - 8.2
 
 sudo: false
 
@@ -17,16 +22,16 @@ matrix:
   fast_finish: true
 
   include:
-    - php: 7.4
+    - php: 8.2
       env: PHPCS=1 DEFAULT=0
 
-    - php: 7.4
+    - php: 8.2
       env: COVERAGE=1 DEFAULT=0
 
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction --dev
-  - if [[ $PHPCS == 1 ]]; then composer require --dev cakephp/cakephp-codesniffer:^4.0 ; fi
+  - if [[ $PHPCS == 1 ]]; then composer require --dev cakephp/cakephp-codesniffer:^5.0 ; fi
 
 script:
   - if [[ $COVERAGE == 1 ]]; then export XDEBUG_MODE=coverage && vendor/bin/phpunit --coverage-clover=coverage.xml ; fi
